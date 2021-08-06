@@ -1,0 +1,135 @@
+<html>
+
+</html>
+
+<head>
+    <title>TechTest</title>
+    <script>
+        function login(username, password) {
+            var settings = {
+                "url": "http://localhost:8000/login?username=" + username + "&" + "password=" + password,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.ajax(settings).done(function (response) {
+                if (response.result == 0) {
+                    alert("Login Success")
+                    accessToken = response.accessToken
+                    $("#accessText").append("<p>" + accessToken.toString() + "</p>")
+                } else {
+                    alert("Login Failed : " + response.msg)
+                    console.log(response)
+                }
+            });
+        }
+
+        function uploadText(filename, accessToken, text) {
+            var settings = {
+                "url": "http://localhost:8000/uploadText",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                "data": {
+                    "fileName": filename,
+                    "accessToken": accessToken,
+                    "fileContent": text
+                }
+            };
+
+            $.ajax(settings).done(function (response) {
+                if (response.result == 0) {
+                    alert("Add Success, try to download that")
+                } else {
+                    alert("Add Failed : " + response.msg)
+                }
+            });
+        }
+
+        function getText(filename) {
+            var settings = {
+                "url": "http://localhost:8000/getText?filename=" + filename,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.ajax(settings).done(function (response) {
+                if (response.result == 0) {
+                    alert("Get Success")
+                    $("#fileText").append("<p>" + response.text + "</p>")
+                } else {
+                    alert("Get Failed : " + response.msg)
+                }
+            });
+        }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- <script src="processRequest.js"></script> -->
+</head>
+
+<body>
+    <div class="form-item">
+
+        <input id="username" type="text" autocomplete="off" placeholder="Username">
+
+    </div>
+
+    <div class="form-item">
+
+        <input id="password" type="password" autocomplete="off" placeholder="Password">
+
+    </div>
+
+    <div class="form-item"><button id="submit">Login</button></div>
+
+    <div class="form-item">
+        <p id="accessText">accessToken = </p>
+    </div>
+
+    <div class="form-item" >
+        <input id="textName" type="text" autocomplete="off" placeholder="filename">
+    </div>
+
+    <div class="form-item" style="height: 200px;width: 200px;">
+        <input id="textContent" type="text" autocomplete="off" placeholder="Enter Text Here" style="height: 200px;width: 200px;">
+    </div>
+
+    <div class="form-item"><button id="uploadText">UploadText</button></div>
+
+    <div class="form-item" >
+        <input id="textNameTD" type="text" autocomplete="off" placeholder="filename">
+    </div>
+
+    <div class="form-item"><button id="getText">GetText</button></div>
+
+    <div class="form-item">
+        <p id="fileText">Text = </p>
+    </div>
+
+
+</body>
+<script>
+    var accessToken = ""
+    $("#submit").click(function () {
+        var username = $("#username").val()
+        var password = $("#password").val()
+        login(username, password)
+    }
+    );
+    $("#uploadText").click(function () {
+        var filename = $("#textName").val()
+        var content = $("#textContent").val()
+        uploadText(filename, accessToken, content)
+    }
+    );
+    $("#getText").click(function () {
+        var filename = $("#textNameTD").val()
+        getText(filename)
+    }
+    );
+</script>
+
+</html>

@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from CS160FTechTest import BackendMySQL
+from django.shortcuts import render
+from . import views
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,5 +27,7 @@ urlpatterns = [
     path('login', BackendMySQL.login, name='login'),
     path('register', BackendMySQL.register, name='register'),
     path('uploadText', BackendMySQL.uploadText, name = "uploadText"),
-    path('getText', BackendMySQL.getText, name = "getText")
+    path('getText', BackendMySQL.getText, name = "getText"),
+    path('index', views.index, name='index'),
+
 ]
