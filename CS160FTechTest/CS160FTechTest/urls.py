@@ -29,5 +29,7 @@ urlpatterns = [
     path('uploadText', BackendMySQL.uploadText, name = "uploadText"),
     path('getText', BackendMySQL.getText, name = "getText"),
     path('index', views.index, name='index'),
+    path('testwrite', views.testwrite, name='testwrite'),
+    path('gallery', views.gallery, name='gallery'),
 
 ]
