@@ -11,24 +11,49 @@
 	<!-- Theme included stylesheets -->
 	<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 	<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
-
-	<!-- Core build with no theme, formatting, non-essential modules -->
-	<!-- <link href="//cdn.quilljs.com/1.3.6/quill.core.css" rel="stylesheet">
-	<script src="//cdn.quilljs.com/1.3.6/quill.core.js"></script> -->
-
+	<style type="text/css">
+		#wrapper{
+			width: 50vw;
+			margin: auto;
+		}
+	</style>
 </head>
 <body>
 	<!-- replace this html -->
-	<div id="editor"></div>
+	<div id="wrapper">
+		<div id="editor"></div>
+	</div>
+	<button onclick="repeat()">Save</button>
+	<div id="paste" class="ql-editor" data-gramm="false" contenteditable="false" spellcheck="false"></div>
 </body>
 <script>
+	
+
+
 	var Toolbar = Quill.import('modules/toolbar');
-	var toolbarOptions = ['bold', 'italic', 'underline', 'strike'];
+	var toolbarOptions = [
+		['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+
+		[{ 'header': 1 }, { 'header': 2 }],               // custom button values
+		[{ 'list': 'ordered'}, { 'list': 'bullet' }],    
+		[{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+		[{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+
+		['clean']                                         // remove formatting button
+	];
 	var container = document.getElementById('editor');
 	var editor = new Quill(container, {
 								modules: {
 									toolbar: toolbarOptions
-								}
+								},
+								theme: 'snow'
 							});
+
+
+	function repeat() {
+		var h = editor.root.innerHTML;
+		paste = document.getElementById("paste")
+		paste.innerHTML = h
+	}
 </script>
 </html>
