@@ -5,6 +5,7 @@
 <head>
 	<title>Gallery</title>
 	<script type="text/javascript" src="./../static/vendors/jquery/jquery-3.3.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="./../static/vendors/bootstrap/css/bootstrap.css" />
 	<style type="text/css">
 		body {
 			background-image: url(./../static/images/bookshelf.png);
@@ -57,26 +58,57 @@
 		.scroll:hover{
 			background-image: url(./../static/images/bookHighlight.png);
 		}
+		#header{
+			width: 100%;
+			height: 10vh;
+			background-color: #D0D6CA;
+			border-bottom: solid black;
+		}
+		#homebtn{
+			margin-top: 2.5%;
+			margin-left: 2.5%;
+			width: 80%;
+			height: 80%;
+			background-color: transparent;
+			border: none;
+			background-image: url(./../static/images/home.png);
+			background-size: 100% 100%;
+		}
 	</style>
 </head>
-<body >
+<body style="overflow-x: hidden; margin: 0 0 0 0">
 
 	<div id="back" class="parallax">
-		<div class="bbook" style="top: 70vh;"></div>
+		<div class="bbook" style="top: 70vh; visibility: hidden;"></div>
 	</div>
 	<div id="mid" class="parallax">
-		<div class="mbook" style="top: 70vh;"></div>
+		<div class="mbook" style="top: 70vh; visibility: hidden;"></div>
 	</div>
 	<div id="closer" class="parallax">
-		<div class="fbook">
+		<div class="fbook" style="visibility: hidden;">
 		</div>
 	</div>
 	<div id="fore" class="parallax">
-		<div class="fbook">
+		<div class="fbook" style="visibility: hidden;">
 		</div>
-		<div class="fbook">
+		<div class="fbook" style="visibility: hidden;">
 		</div>
 	</div>
+	<div class="containter-fluid">
+		<div id="header" class="row" style="margin: 0 0 0 0">
+			<div class="col-1" style="padding: 0 0 0 0">
+				<button id="homebtn"></button>
+			</div>
+			<div class="col-3"></div>
+			<div class="col-4">
+				<div style="text-align:center; margin: auto; font-size: 6.5vh;">Gallery</div>
+				
+			</div>
+			<div class="col-4"></div>
+			
+		</div>
+	</div>
+	
 	
 	
 	
@@ -91,6 +123,21 @@
 	c = document.getElementById("closer");
 	m = document.getElementById("mid");
 	b = document.getElementById("back");
+
+	function goToBook(bookNumber) {
+		alert($(bookNumber).attr("val"))
+	}
+
+	window.onload = function(event) {
+		marginBot = "80vh"
+		newShelf(marginBot,f);
+		newHangingShelf();
+		newHangingShelf();
+		newStair();
+		newStair();
+		newStair();
+		newStair();
+	}
 	window.onscroll = function(event) {
 		h = pageYOffset
 		foregroundChange = -h * 5;
@@ -100,22 +147,22 @@
 		$("#closer").css("top", closerChange)
 		$("#mid").css("top", midgroundChange)
 		// console.log(lowestF - h + foregroundChange);
-		if (lowestF - h + foregroundChange < 100) {
+		if (lowestF - h + foregroundChange < 20) {
 			//make new foreground book
 			marginBot = "80vh"
 			newShelf(marginBot,f);
 			lowestF += $(".fbook").height() + parseInt(marginBot)
 		}
-		if (lowestC - h + closerChange < 120) {
+		if (lowestC - h + closerChange < 20) {
 			marginBot = "500vh"
 			newShelf(marginBot,c);
 			lowestC += $(".fbook").height() + parseInt(marginBot)
 		}
-		if (lowestM - h + midgroundChange < 300) {
+		if (lowestM - h + midgroundChange < 50) {
 			//make new foreground book
 			newHangingShelf();
 		}
-		if (lowestB - h < 500) {
+		if (lowestB - h < 450) {
 			//make new foreground book
 			newStair();
 		}
@@ -170,15 +217,19 @@
 		b.appendChild(newDiv);
 		lowestB += $(".bbook").height() + parseInt($(".bbook").css("margin-bottom"));
 	}
+	var bookCount = 0;
 	function placeScroll(div,height,width,left,top) {
 		var scroll = document.createElement("div");
 		scroll.setAttribute("class", "scroll");
-		scroll.setAttribute("onmouseover", "")
+		var temp = bookCount
+		scroll.setAttribute("onclick", "goToBook(this)")
 		$(scroll).css("top",top);
 		$(scroll).css("left",left);
 		$(scroll).css("height",height);
 		$(scroll).css("width",width);
+		$(scroll).attr("val",bookCount)
 		div.appendChild(scroll);
+		bookCount += 1
 	}
 </script>
 </html>
