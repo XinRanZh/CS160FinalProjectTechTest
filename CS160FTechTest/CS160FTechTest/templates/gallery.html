@@ -1,22 +1,23 @@
-{% load static %}
+<!-- {% load static %} -->
 
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Gallery</title>
-	<script type="text/javascript" src="{% static '/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
+	<script type="text/javascript" src="./../static/vendors/jquery/jquery-3.3.1.min.js"></script>
 	<style type="text/css">
 		body {
-			background-image: url(./../static/images/bookshelf.jpeg);
+			background-image: url(./../static/images/bookshelf.png);
 			background-repeat: repeat;
-			background-size: 30px;
+			background-size: 100px;
 		}
 		.parallax{
 			/* height: 50vh;
 			width: 100%;
 			border: solid black; */
 			position: absolute;
-			width: 100%
+			width: 100%;
+			pointer-events: none;
 		}
 		#fore{
 
@@ -26,16 +27,15 @@
 		}
 		.fbook{
 
-			height: 100vh;
-			width: 40vw;
-			background-image: url(./../static/images/close.png);
+			height: 120vh;
+			width: 130vw;
+			background-image: url(./../static/images/shelf.png);
 			background-size: 100% 100%;
-			margin-bottom: 40vh;
 		}
 		.mbook{
 			height: 50vh;
-			width: 50vw;
-			background-image: url(./../static/images/mid.png);
+			width: 200vw;
+			background-image: url(./../static/images/hshelf.png);
 
 			background-size: 100% 100%;
 			margin-bottom: 20vh;
@@ -43,13 +43,23 @@
 		.bbook{
 			height: 30vh;
 			width: 60vw;
-			background-image: url(./../static/images/far.png);
+			background-image: url(./../static/images/stairs.png);
 			background-size: 100% 100%;
 			margin-bottom: 10vh;
 		}
+		.scroll{
+			position: relative;
+			background-image: url(./../static/images/book.png);
+			background-size: 100% 100%;
+			float: left;
+			pointer-events: auto;
+		}
+		.scroll:hover{
+			background-image: url(./../static/images/bookHighlight.png);
+		}
 	</style>
 </head>
-<body>
+<body >
 
 	<div id="back" class="parallax">
 		<div class="bbook" style="top: 70vh;"></div>
@@ -57,10 +67,17 @@
 	<div id="mid" class="parallax">
 		<div class="mbook" style="top: 70vh;"></div>
 	</div>
-	<div id="fore" class="parallax">
-		<div class="fbook"></div>
-		<div class="fbook"></div>
+	<div id="closer" class="parallax">
+		<div class="fbook">
+		</div>
 	</div>
+	<div id="fore" class="parallax">
+		<div class="fbook">
+		</div>
+		<div class="fbook">
+		</div>
+	</div>
+	
 	
 	
 	<!-- /replace this html -->
@@ -69,58 +86,99 @@
 	lowestB = 0;
 	lowestM = 0;
 	lowestF = 0;
+	lowestC = 0;
 	f = document.getElementById("fore");
+	c = document.getElementById("closer");
 	m = document.getElementById("mid");
 	b = document.getElementById("back");
 	window.onscroll = function(event) {
 		h = pageYOffset
 		foregroundChange = -h * 5;
+		closerChange = -h * 4;
 		midgroundChange = -h
 		$("#fore").css("top", foregroundChange)
+		$("#closer").css("top", closerChange)
 		$("#mid").css("top", midgroundChange)
 		// console.log(lowestF - h + foregroundChange);
 		if (lowestF - h + foregroundChange < 100) {
 			//make new foreground book
-			var newDiv = document.createElement("div")
-			newDiv.setAttribute("class", "fbook")
-			if (Math.random() > 0.5) {
-				newDiv.setAttribute("style", "transform: scaleX(-1); margin-left: auto; margin-right: 0")
-			}
-			i = Math.random() * -10
-			t = $(newDiv).css("transform") + " translate(" + i.toString() + "% ,0)"
-			$(newDiv).css("transform", t);
-			f.appendChild(newDiv);
-			lowestF += $(".fbook").height() + parseInt($(".fbook").css("margin-bottom"))
+			marginBot = "80vh"
+			newShelf(marginBot,f);
+			lowestF += $(".fbook").height() + parseInt(marginBot)
+		}
+		if (lowestC - h + closerChange < 120) {
+			marginBot = "500vh"
+			newShelf(marginBot,c);
+			lowestC += $(".fbook").height() + parseInt(marginBot)
 		}
 		if (lowestM - h + midgroundChange < 300) {
 			//make new foreground book
-			var newDiv = document.createElement("div")
-			newDiv.setAttribute("class", "mbook")
-			if (Math.random() > 0.5) {
-				newDiv.setAttribute("style", "transform: scaleX(-1); margin-left: auto; margin-right: 0")
-			}
-			i = Math.random() * -30
-			t = $(newDiv).css("transform") + " translate(" + i.toString() + "% ,0)"
-			$(newDiv).css("transform", t);
-			m.appendChild(newDiv);
-			lowestM += $(".mbook").height() + parseInt($(".mbook").css("margin-bottom"))
+			newHangingShelf();
 		}
 		if (lowestB - h < 500) {
 			//make new foreground book
-			var newDiv = document.createElement("div")
-			newDiv.setAttribute("class", "bbook")
-			if (Math.random() > 0.5) {
-				newDiv.setAttribute("style", "transform: scaleX(-1); margin-left: auto; margin-right: 0")
-			}
-			i = Math.random() * -90
-			t = $(newDiv).css("transform") + " translate(" + i.toString() + "% ,0)"
-			$(newDiv).css("transform", t);
-			console.log($(newDiv).css("transform") + " translate(" + i.toString() + "% ,0)");
-			b.appendChild(newDiv);
-			lowestB += $(".bbook").height() + parseInt($(".bbook").css("margin-bottom"));
-			console.log($(".bbook").height() + parseInt($(".bbook").css("margin-bottom")));
+			newStair();
 		}
 
+	}
+	function newShelf(marginBot,parent) {
+		var newDiv = document.createElement("div")
+		newDiv.setAttribute("style", "margin-bottom: " + marginBot)
+		newDiv.setAttribute("class", "fbook")
+		t = $(newDiv).css("transform") + " translate(-10%,0%)";
+		$(newDiv).css("transform", t);
+		if (Math.random() > 0.9) {
+			t = $(newDiv).css("transform") + " rotate(180deg)";
+			$(newDiv).css("transform", t);
+		}
+		i = Math.random() * 20
+		i -= 10
+		t = $(newDiv).css("transform") + " rotate(" + i.toString() + "deg)"
+		$(newDiv).css("transform", t);
+		placeScroll(newDiv,"40%","20%","10vw","0");
+		placeScroll(newDiv,"40%","20%","25vw","0");
+		placeScroll(newDiv,"40%","20%","40vw","0");
+		parent.appendChild(newDiv);
+		
+	}
+	
+	
+	function newHangingShelf(){
+		var newDiv = document.createElement("div")
+		newDiv.setAttribute("class", "mbook")
+		i = Math.random() * 32
+		i -= 44
+		console.log(i);
+		t = $(newDiv).css("transform") + " translate(" + i.toString() + "% ,0)"
+		$(newDiv).css("transform", t);
+		placeScroll(newDiv,"40%","5%","49%","45%")
+		m.appendChild(newDiv);
+		lowestM += $(".mbook").height() + parseInt($(".mbook").css("margin-bottom"))
+	}
+
+
+	function newStair() {
+		var newDiv = document.createElement("div")
+		newDiv.setAttribute("class", "bbook")
+		if (Math.random() > 0.5) {
+			newDiv.setAttribute("style", "transform: scaleX(-1); margin-left: auto; margin-right: 0")
+		}
+		i = Math.random() * -70
+		t = $(newDiv).css("transform") + " translate(" + i.toString() + "% ,0)"
+		$(newDiv).css("transform", t);
+		placeScroll(newDiv,"30%","5%","75%","-6%")
+		b.appendChild(newDiv);
+		lowestB += $(".bbook").height() + parseInt($(".bbook").css("margin-bottom"));
+	}
+	function placeScroll(div,height,width,left,top) {
+		var scroll = document.createElement("div");
+		scroll.setAttribute("class", "scroll");
+		scroll.setAttribute("onmouseover", "")
+		$(scroll).css("top",top);
+		$(scroll).css("left",left);
+		$(scroll).css("height",height);
+		$(scroll).css("width",width);
+		div.appendChild(scroll);
 	}
 </script>
 </html>
